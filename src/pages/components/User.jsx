@@ -1,5 +1,4 @@
 export default function User({user}) {
-    // if (props.user === null) return <p>Loading...</p>
 
     return (
         <li>

@@ -1,4 +1,3 @@
-import Modals from "./modals/Modals"
 import User from "./User"
 
 export default function UsersList({users, setModal}) {

@@ -30,7 +30,7 @@ export default function App() {
   }
 
   return (
-    <div className="app">
+    <div className="App">
       <Routes>
         <Route index element={<Navigate replace to="/login" />} />
         <Route path='/login' element={<LoginPage users={users} setModal={setModal} />} />
