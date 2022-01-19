@@ -1,14 +1,20 @@
+import Modals from "./modals/Modals"
 import User from "./User"
 
-export default function UsersList(props) {
-    if (props.users === null) return <p>Loading...</p>
-
-    return(
+export default function UsersList({users, setModal}) {
+    
+    return (
         <ul>
-            {props.users.map(user => {
-            <User user = {user}/>
-        })}
+            {users.map(user => {
+                <User key={user.id} user={user} />
+            })}
+            <li>
+                <button onClick={() => setModal('add-user')} 
+                className="user-selection">
+                    <h3>+ Add a new user</h3>
+                </button>
+            </li>
         </ul>
-        
+
     )
 }
