@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react"
 import UsersList from "./components/UsersList"
 
-export default function LoginPage({setModal}) {
-    const [users, setUsers] = useState([])
-
-    useEffect(() => {
-        fetch('http://localhost:4000/users').then(resp => resp.json())
-        .then(usersFromServer => setUsers(usersFromServer))
-    }, [])
+export default function LoginPage({ users,setModal }) {
     
     return (
         <div className="main-wrapper login">

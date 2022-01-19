@@ -1,4 +1,5 @@
-export default function NewUserModal({setModal}) {
+export default function NewUserModal({ addUser ,setModal}) {
+    
     return (
         <div className="modal-wrapper" onClick={() => setModal("")}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -6,7 +7,11 @@ export default function NewUserModal({setModal}) {
               X
             </button>
             <h2>Enter your details</h2>
-            <form className="new-user">
+            <form className="new-user" onSubmit={(e) => {
+                e.preventDefault()
+                addUser(e.target.firstName.value, e.target.lastName.value, e.target.phoneNumber.value)
+                e.target.reset()
+            }}>
               <label htmlFor="firstName">First name</label>
               <input name="firstName" id="firstName" type="text" />
               <label htmlFor="lastName">Last name</label>
