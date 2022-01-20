@@ -8,6 +8,7 @@ import MessagesPage from "./pages/MessagesPage";
 export default function App() {
   const [modal, setModal] = useState('')
   const [users, setUsers] = useState([])
+  const [currentUser, setCurrentUser] = useState(null)
 
   useEffect(() => {
     fetch('http://localhost:4000/users').then(resp => resp.json())
@@ -33,9 +34,9 @@ export default function App() {
     <div className="App">
       <Routes>
         <Route index element={<Navigate replace to="/login" />} />
-        <Route path='/login' element={<LoginPage users={users} setModal={setModal} />} />
-        <Route path='/logged-in' element={<LoggedinPage />} />
-        <Route path='/logged-in/:conversationId' element={<MessagesPage />} />
+        <Route path='/login' element={<LoginPage setCurrentUser={setCurrentUser} users={users} setModal={setModal} />} />
+        <Route path='/logged-in' element={<LoggedinPage users={users} currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />
+        <Route path='/logged-in/:conversationId' element={<LoggedinPage users={users} currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />
         <Route path='*' element={<h1>Not Found</h1>} />
       </Routes>
       <Modals addUser={addUser} modal={modal} setModal={setModal} />

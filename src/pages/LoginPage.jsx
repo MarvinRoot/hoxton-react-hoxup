@@ -1,17 +1,16 @@
 import User from "./components/User"
-import UsersList from "./components/UsersList"
 
-export default function LoginPage({ users, setModal }) {
+export default function LoginPage({ users, setModal, setCurrentUser }) {
 
     return (
         <div className="main-wrapper login">
             <section className="login-section">
                 <h2>Choose your user!</h2>
-                {/* <UsersList setModal={setModal} users={users} /> */}
                 <ul>
-                    {users.map(user => {
-                        <User key={user.id} user={user} />
-                    })}
+                    {users.map(user => 
+
+                        <User key={user.id} user={user} setCurrentUser={setCurrentUser}/>
+                    )}
                     <li>
                         <button onClick={() => setModal('add-user')}
                             className="user-selection">

@@ -1,4 +1,36 @@
-export default function LoggedinPage() {
+import { useEffect } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { useState } from "react/cjs/react.development"
+
+export default function LoggedinPage({ users, currentUser, setCurrentUser }) {
+    const [conversations, setConversations] = useState([])
+    const [currentConversation, setCurrentConversation] = useState(null)
+
+    const navigate = useNavigate()
+    const params = useParams()
+    
+    useEffect(() => {
+        if (currentUser === null) navigate('/login')
+    }, [currentUser])
+    
+    useEffect(() => {
+        fetch(`http://localhost:4000/conversations?userId=${currentUser.id}`)
+            .then(resp => resp.json())
+            .then(conversationsFromServer => setConversations(conversationsFromServer))
+    }, [])
+
+    useEffect(() => {
+        if (params.conversationId) {
+          fetch(
+            `http://localhost:4000/conversations/${params.conversationId}?_embed=messages`
+          )
+            .then(resp => resp.json())
+            .then(conversation => setCurrentConversation(conversation))
+        }
+      }, [params.conversationId])
+
+    if (currentUser === null) return <h1>User Not Found</h1>
+
     return (
         <div className="main-wrapper">
             {/* <!-- Side Panel --> */}
@@ -9,10 +41,11 @@ export default function LoggedinPage() {
                         className="avatar"
                         width="50"
                         height="50"
-                        src="https://robohash.org/2"
+                        src={currentUser.avatar}
                         alt=""
                     />
-                    <h3>Tin Man</h3>
+
+                    <h3>{currentUser.firstName} {currentUser.lastName}</h3>
                 </header>
 
                 {/* <!-- Search form --> */}
@@ -36,40 +69,30 @@ export default function LoggedinPage() {
                         </button>
                     </li>
                     {/* <!--  --> */}
-                    <li>
-                        <button className="chat-button">
-                            <img
-                                className="avatar"
-                                height="50"
-                                width="50"
-                                alt=""
-                                src="https://robohash.org/2"
-                            />
-                            <div>
-                                <h3>Tin Man</h3>
-                                <p>Last message</p>
-                            </div>
-                        </button>
-                    </li>
-                    <li>
-                        <button className="chat-button">
-                            <img
-                                className="avatar"
-                                height="50"
-                                width="50"
-                                alt=""
-                                src="https://robohash.org/3"
-                            />
-                            <div>
-                                <h3>Carl T-800</h3>
-                                <p>Last message</p>
-                            </div>
-                        </button>
-                    </li>
+
+                    {conversations.map(conversation => {
+                        const talkingToId = currentUser.id === conversation.userId
+                            ? conversation.participantId : conversation.userId
+
+                        const talkingToUser = users.find(user => user.id === talkingToId)
+                        return (
+                            <li onClick={()=> navigate(`/logged-in/${conversation.id}`)}>
+                                <button>
+                                    <img
+                                        className="avatar"
+                                        src={talkingToUser.avatar}
+                                        height="50"
+                                        width="50"
+                                        alt="" />
+                                    <div>
+                                        <h3>{talkingToUser.firstName} {talkingToUser.lastName}</h3>
+                                        <p>Last Message</p>
+                                    </div>
+                                </button>
+                            </li>
+                        )
+                    })}
                 </ul>
-
-
-
                 {/* <!--  --> */}
             </aside>
 
