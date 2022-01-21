@@ -2,8 +2,9 @@ import { useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { useState } from "react/cjs/react.development"
 import Conversation from "./components/Conversation"
+import Modals from "./components/modals/Modals"
 
-export default function LoggedinPage({ users, currentUser, setCurrentUser }) {
+export default function LoggedinPage({ users, currentUser, modal, setModal, setCurrentUser }) {
     const [conversations, setConversations] = useState([])
 
     const navigate = useNavigate()
@@ -19,6 +20,34 @@ export default function LoggedinPage({ users, currentUser, setCurrentUser }) {
             .then(conversationsFromServer => setConversations(conversationsFromServer))
     }, [])
 
+    const usersNotTalkedTo = users.filter(user => {
+        // dont show the current user in the list
+        if (currentUser && user.id === currentUser.id) return false
+        //dont show the users who are already having a conversation with the current user
+        for (const conversation of conversations) {
+            if (conversation.userId === user.id) return false
+            if (conversation.participantId === user.id) return false
+        }
+        return true
+    })
+    
+    function createConversation (participantId) {
+        fetch('http://localhost:4000/conversations', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: currentUser.id,
+            participantId: participantId
+          })
+        })
+          .then(resp => resp.json())
+          .then(newConversation => {
+            setConversations([...conversations, newConversation])
+            setModal('')
+          })
+      }
 
     if (currentUser === null) return <h1>User Not Found</h1>
 
@@ -49,17 +78,13 @@ export default function LoggedinPage({ users, currentUser, setCurrentUser }) {
                     />
                 </form>
 
-                {/* <!--  Side Chat List goes here. Check side-chat-list.html
-
- -->*/}
+                {/* <!--  Side Chat List goes here. Check side-chat-list.html -->*/}
                 <ul>
-                    {/* <!-- This first item should always be present --> */}
                     <li>
-                        <button className="chat-button">
+                        <button className="chat-button" onClick={()=> setModal('start-chat')}>
                             <div><h3>+ Start a new Chat</h3></div>
                         </button>
                     </li>
-                    {/* <!--  --> */}
 
                     {conversations.map(conversation => {
                         const talkingToId = currentUser.id === conversation.userId
@@ -90,6 +115,8 @@ export default function LoggedinPage({ users, currentUser, setCurrentUser }) {
             {params.conversationId ? (
                 <Conversation currentUser={currentUser}/>
             ) : null}
+
+            <Modals createConversation={createConversation} usersNotTalkedTo={usersNotTalkedTo} setModal={setModal} addUser={undefined} modal={modal}/>
         </div>
     )
 }

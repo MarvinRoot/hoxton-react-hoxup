@@ -35,11 +35,11 @@ export default function App() {
       <Routes>
         <Route index element={<Navigate replace to="/login" />} />
         <Route path='/login' element={<LoginPage setCurrentUser={setCurrentUser} users={users} setModal={setModal} />} />
-        <Route path='/logged-in' element={<LoggedinPage users={users} currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />
-        <Route path='/logged-in/:conversationId' element={<LoggedinPage users={users} currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />
+        <Route path='/logged-in' element={<LoggedinPage modal={modal} setModal={setModal} users={users} currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />
+        <Route path='/logged-in/:conversationId' element={<LoggedinPage modal={modal} setModal={setModal} users={users} currentUser={currentUser} setCurrentUser={setCurrentUser}/>} />
         <Route path='*' element={<h1>Not Found</h1>} />
       </Routes>
-      <Modals addUser={addUser} modal={modal} setModal={setModal} />
+      <Modals addUser={addUser} modal={modal} setModal={setModal} createConversation={undefined} usersNotTalkedTo={undefined} />
     </div>
   )
 }
