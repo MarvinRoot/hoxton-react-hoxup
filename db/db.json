@@ -72,6 +72,12 @@
       "messageText": "Yeah, just chillin",
       "conversationId": 3,
       "id": 6
+    },
+    {
+      "userId": 1,
+      "messageText": "Whazzaaap",
+      "conversationId": 3,
+      "id": 7
     }
   ],
   "conversations": [
